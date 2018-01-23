@@ -7,6 +7,7 @@ import urllib
 
 import scrapy
 from scrapy_spiders.items import GrabItem
+from scrapy_spiders.comm.misc import check_response
 
 class EbaySpider(scrapy.Spider):
     '''
@@ -103,6 +104,7 @@ class EbaySpider(scrapy.Spider):
                                          callback=self.parse_keyword_list)
                 yield request
 
+    @check_response
     def parse_detail(self, response):
         item = response.meta['item']
 
