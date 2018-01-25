@@ -8,6 +8,9 @@ def check_response(func):
         '''
             :args[0] self
             :args[1] response
+            Could be used to check proxy. or do things like replace response body.
+                args[1]._encoding = 'utf-8'
+                args[1]._set_body(xxx)
         '''
         origin_func = func(*args, **kwargs)
         page_source = args[1].body
