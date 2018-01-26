@@ -12,3 +12,8 @@ class GrabItem(scrapy.Field):
     name = scrapy.Field()
     product_url = scrapy.Field()
     store_id = scrapy.Field()
+
+class CategoryItem(scrapy.Field):
+    category_name = scrapy.Field()
+    category_url = scrapy.Field()
+    refer = scrapy.Field()
