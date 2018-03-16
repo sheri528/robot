@@ -11,7 +11,7 @@ from scrapy_spiders.comm.misc import check_response
 
 class EbaySpider(scrapy.Spider):
     '''
-        Go through ever sub sit in ebay, fetch data and sending via email.
+        Go through ever sub-site in ebay, fetch data and sending via email.
         Args:
             -keyword- Search word. Using "hello word" instead for None
         Run:
