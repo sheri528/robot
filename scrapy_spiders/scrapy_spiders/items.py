@@ -17,3 +17,7 @@ class CategoryItem(scrapy.Field):
     category_name = scrapy.Field()
     category_url = scrapy.Field()
     refer = scrapy.Field()
+
+class GrabPriceItem(GrabItem):
+    price = scrapy.Field()
+    price_unit = scrapy.Field()
