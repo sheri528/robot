@@ -14,6 +14,7 @@ BOT_NAME = 'scrapy_spiders'
 SPIDER_MODULES = ['scrapy_spiders.spiders']
 NEWSPIDER_MODULE = 'scrapy_spiders.spiders'
 
+api_proxy = "http://proxy.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_spiders (+http://www.yourdomain.com)'
