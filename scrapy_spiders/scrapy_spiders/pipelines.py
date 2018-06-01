@@ -9,7 +9,7 @@ import time
 
 from scrapy.mail import MailSender
 from scrapy import signals
-from scrapy.exporters import XmlItemExporter
+from scrapy.exporters import XmlItemExporter, CsvItemExporter
 
 class XmlExportPipeline(object):
 
@@ -30,6 +30,19 @@ class XmlExportPipeline(object):
     def process_item(self, item, spider):
         self.exporter.export_item(item)
         return item
+
+
+class CsvExportPipeline(XmlExportPipeline):
+
+    def __init__(self):
+        self.files = {}
+
+    def open_spider(self, spider):
+        file = open('%s_products.csv' % spider.name, 'w+b')
+        self.files[spider] = file
+        self.exporter = CsvItemExporter(file)
+        self.exporter.start_exporting()
+
 
 class GrabSendingEmailPipeline(object):
     ''' Base class for sending E-mail. '''
