@@ -85,3 +85,28 @@ class EbaySendingEmailPipeline(GrabSendingEmailPipeline):
             attachs=((attach_name, mimetype, file_object),),
             charset='utf8'
         )
+
+
+class ProxyStatusCountPipeline(GrabSendingEmailPipeline):
+
+    def __init__(self, *args, **kwargs):
+        super(ProxyStatusCountPipeline, self).__init__(*args, **kwargs)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        pipeline = cls()
+        crawler.signals.connect(pipeline.spider_closed, signals.spider_closed)
+        return pipeline
+
+    def open_spider(self, spider):
+        pass
+
+    def spider_closed(self, spider):
+        body = "Hi~,\n\nproxy status: \n\n{0}".format('\n'.join([':'.join([str(k), str(v)]) for k,v in spider.proxy_count.items()]))
+        self.mailer.send(
+            to=["xx@xx.xx"],
+            subject="proxy status",
+            body=body,
+            # charset='utf8',
+            # mimetype='text/plain'
+        )
