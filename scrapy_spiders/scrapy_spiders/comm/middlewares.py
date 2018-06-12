@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
 
 import requests
 import random
@@ -18,15 +19,27 @@ class CustomUserAgentMiddleware(object):
         request.headers['User-Agent'] = agent
 
 
-class AddProxyMiddleware(object):
 
+class AddProxyMiddleware(object):
     def process_request(self, request, spider):
-        try:
-            request.meta['proxy'] = ''.join(['http://', requests.get(api_proxy).text])
-            # request.meta['dont_filter'] = True
-            logger.info("proxy. Success: proxy: {0}, request url: {1}".format(request.meta['proxy'], request.url))
-        except Exception as e:
-            logger.info("no proxy. Error: {0}".format(e))
+        if not re.search('192\.168\.\d{1,3}\.\d{1,3}', request.url):
+            try:
+                proxy_response = requests.get(api_proxy)
+            except Exception as e:
+                logger.error("proxy Error: {}".format(e))
+            else:
+                if proxy_response.status_code == 200:
+                    proxy = proxy_response.text
+                    request.meta['proxy'] = ''.join(['http://', proxy])
+                    logger.info("proxy. Success: {0}, {1}".format(request.url, request.meta['proxy']))
+
+                else:
+                    logger.info("proxy is not OK. Error: {0}".format(proxy_response.text))
+
+                if hasattr(spider, 'proxy_count'):
+                    spider.proxy_count[proxy_response.status_code] = \
+                        spider.proxy_count.get(proxy_response.status_code, 0) + 1
+
         return None
 
 
