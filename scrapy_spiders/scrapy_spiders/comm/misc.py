@@ -28,6 +28,27 @@ def check_response(func):
 
     return is_normal
 
+def check_proxy(func):
+    @wraps(func)
+    def is_normal(*args, **kwargs):
+        '''
+            统计proxy响应状态。spider需要设置属性proxy_count为dict类型
+            :args[0] self
+            :args[1] response
+        '''
+        origin_func = func(*args, **kwargs)
+        try:
+            use_proxy = args[1].request.meta.get('proxy', None)
+            response_status = args[1].status
+            if use_proxy and response_status in [200, 600]:
+                args[0].proxy_count[response_status] = args[0].proxy_count.get(response_status, 0) + 1
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+        return origin_func
+
+    return is_normal
+
 
 def timethis(func):
     '''
